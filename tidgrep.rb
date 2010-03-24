@@ -39,11 +39,23 @@ class Tiddle
   end
 end
 
-tiddles = Tiddle.parse("/Users/ongaeshi/Dropbox/memo/memo.html")
+tiddles = Tiddle.parse("#{ARGV[0]}")
+matches = 0
+total_lines = 0
 
-puts tiddles[0].title
-puts tiddles[0].created
-puts tiddles[0].content.grep(/Flash/)
+tiddles.each do |tiddle|
+  line_no = 1
+  tiddle.content.each_line do |line|
+    if (/#{ARGV[1]}/ =~ line)
+      puts "#{tiddle.title}:#{line_no}:#{line}"
+      matches += 1
+    end
+    line_no += 1
+    total_lines += 1
+  end
+end
 
-p tiddles.size
-# tiddles.each {|tiddle| p tiddle}
+puts "matches : #{matches}"
+puts "total lines : #{total_lines}"
+puts "total tiddles : #{tiddles.size}"
+
