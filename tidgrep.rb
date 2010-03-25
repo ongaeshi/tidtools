@@ -40,22 +40,30 @@ class Tiddle
 end
 
 tiddles = Tiddle.parse("#{ARGV[0]}")
-matches = 0
+match_lines = 0
 total_lines = 0
+match_tiddles = 0
 
 tiddles.each do |tiddle|
+  is_match_tiddle = false
   line_no = 1
   tiddle.content.each_line do |line|
     if (/#{ARGV[1]}/ =~ line)
       puts "#{tiddle.title}:#{line_no}:#{line}"
-      matches += 1
+      match_lines += 1
+      unless is_match_tiddle
+        match_tiddles += 1
+        is_match_tiddle = true
+      end
     end
     line_no += 1
     total_lines += 1
   end
 end
 
-puts "matches : #{matches}"
+puts "match lines : #{match_lines}"
 puts "total lines : #{total_lines}"
+
+puts "match tiddles : #{match_tiddles}"
 puts "total tiddles : #{tiddles.size}"
 
