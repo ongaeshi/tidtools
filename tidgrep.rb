@@ -3,6 +3,7 @@
 
 require 'rubygems'
 require 'hpricot'
+require 'optparse'
 
 class Tiddle
   attr_reader :title, :created, :modified, :tags, :changecount, :content
@@ -55,12 +56,19 @@ class Tiddle
   end
 end
 
+title = nil
+
+opt = OptionParser.new('tidgrep [option] keyword')
+opt.on('-t TITLE', '--title TITLE', 'match title') {|v| title = /#{v}/ }
+opt.parse!
+
 tiddles = Tiddle.parse("#{ARGV[0]}")
 match_lines = 0
 total_lines = 0
 match_tiddles = 0
 
 tiddles.each do |tiddle|
+  next if (title && tiddle.title !~ title)
   is_match_tiddle = false
   line_no = 1
   tiddle.content.each_line do |line|
