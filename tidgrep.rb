@@ -25,17 +25,33 @@ class Tiddle
     doc.search("div").each do |elem|
       if (elem['id'] == 'storeArea')
         elem.search("div").each do |tiddle|
-          tiddles.push(Tiddle.new(tiddle['title'],
+          tiddles.push(Tiddle.new(title(tiddle),
                                   tiddle['created'],
                                   tiddle['modified'],
                                   tiddle['tags'],
                                   tiddle['changecount'],
-                                  tiddle.search("pre").inner_html))
+                                  content(tiddle)))
         end
       end
     end
 
     return tiddles
+  end
+
+  # tiddleのタイトルを取得
+  def self.title(tiddle)
+    tiddle['title'] || tiddle['tiddler']
+  end
+
+  # tiddleの内容を取得
+  def self.content(tiddle)
+    pre = tiddle.search("pre")
+
+    if (pre.size > 0)
+      pre.inner_html
+    else
+      tiddle.inner_html
+    end
   end
 end
 
