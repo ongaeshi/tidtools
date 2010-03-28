@@ -56,6 +56,11 @@ class Tiddle
   end
 end
 
+def isValidOption(file_name, title, keyword)
+  return false if !file_name
+  return title || keyword
+end
+
 title = nil
 regexp_option = 0
 file_name = nil
@@ -68,7 +73,9 @@ opt.on('-i', '--ignore', 'ignore case') {|v| regexp_option |= Regexp::IGNORECASE
 opt.on('-r', '--report', 'disp report') {|v| report = true }
 opt.parse!
 
-if (!file_name || ARGV.size != 1)
+keyword = ARGV[0]
+
+if (!isValidOption(file_name, title, keyword))
   puts opt.help
   exit
 end
@@ -79,30 +86,40 @@ total_lines = 0
 match_tiddles = 0
 
 title_regexp = title && Regexp.new(title, regexp_option)
-content_regexp = ARGV[0] && Regexp.new(ARGV[0], regexp_option)
+content_regexp = keyword && Regexp.new(keyword, regexp_option)
 
 tiddles.each do |tiddle|
   next if (title && tiddle.title !~ title_regexp)
   is_match_tiddle = false
   line_no = 1
-  tiddle.content.each_line do |line|
-    if (content_regexp =~ line)
-      puts "#{tiddle.title}:#{line_no}:#{line}"
-      match_lines += 1
-      unless is_match_tiddle
-        match_tiddles += 1
-        is_match_tiddle = true
+
+  if (content_regexp)
+    tiddle.content.each_line do |line|
+      if (content_regexp =~ line)
+        puts "#{tiddle.title}:#{line_no}:#{line}"
+        match_lines += 1
+        unless is_match_tiddle
+          match_tiddles += 1
+          is_match_tiddle = true
+        end
       end
+      line_no += 1
+      total_lines += 1
     end
-    line_no += 1
-    total_lines += 1
+  else
+    puts tiddle.title
+    match_tiddles += 1
+    is_match_tiddle = true
   end
+
 end
 
 if (report)
   puts "-----------------------------"
-  puts "match lines : #{match_lines}"
-  puts "total lines : #{total_lines}"
+  if (content_regexp)
+    puts "match lines : #{match_lines}"
+    puts "total lines : #{total_lines}"
+  end
   puts "match tiddles : #{match_tiddles}"
   puts "total tiddles : #{tiddles.size}"
 end
