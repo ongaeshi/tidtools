@@ -65,12 +65,14 @@ title = nil
 regexp_option = 0
 file_name = nil
 report = false
+match_rule = "grep"
 
 opt = OptionParser.new('tidgrep [option] keyword')
 opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| file_name = v }
 opt.on('-t TITLE', '--title TITLE', 'match title') {|v| title = v }
 opt.on('-i', '--ignore', 'ignore case') {|v| regexp_option |= Regexp::IGNORECASE }
 opt.on('-r', '--report', 'disp report') {|v| report = true }
+opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [grep, tiddle, hr]') {|v| match_rule = v; p match_rule }
 opt.parse!
 
 keyword = ARGV[0]
@@ -96,11 +98,23 @@ tiddles.each do |tiddle|
   if (content_regexp)
     tiddle.content.each_line do |line|
       if (content_regexp =~ line)
-        puts "#{tiddle.title}:#{line_no}:#{line}"
-        match_lines += 1
-        unless is_match_tiddle
-          match_tiddles += 1
-          is_match_tiddle = true
+        case match_rule
+        when "grep"
+          puts "#{tiddle.title}:#{line_no}:#{line}"
+          match_lines += 1
+          unless is_match_tiddle
+            match_tiddles += 1
+            is_match_tiddle = true
+          end
+        when "tiddle"
+          match_lines += 1
+          unless is_match_tiddle
+            puts "--- #{tiddle.title} --------------------"
+            match_tiddles += 1
+            is_match_tiddle = true
+          end
+          puts "#{line}"
+        when "hr"
         end
       end
       line_no += 1
@@ -115,7 +129,7 @@ tiddles.each do |tiddle|
 end
 
 if (report)
-  puts "-----------------------------"
+  puts "------------------------------"
   if (content_regexp)
     puts "match lines : #{match_lines}"
     puts "total lines : #{total_lines}"
