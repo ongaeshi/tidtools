@@ -63,7 +63,7 @@ end
 
 title = nil
 regexp_option = 0
-file_name = nil
+file_name = ENV['TIDGREP_PATH']
 report = false
 match_rule = "grep"
 
