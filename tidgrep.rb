@@ -30,7 +30,7 @@ if (!isValidOption(file_name, title, keyword))
   exit
 end
 
-tiddles = Tiddle.parse(file_name)
+tiddles = Tiddle.parse_sort_modified(file_name)
 match_lines = 0
 total_lines = 0
 match_tiddles = 0
