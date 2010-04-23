@@ -6,6 +6,7 @@ Rakefile
 bin/tidgrep
 lib/tidgrep/cli.rb
 lib/tidtools.rb
+lib/tidtools/tiddle.rb
 script/console
 script/destroy
 script/generate
