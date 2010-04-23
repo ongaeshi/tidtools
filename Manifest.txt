@@ -3,9 +3,12 @@ Manifest.txt
 PostInstall.txt
 README.rdoc
 Rakefile
+bin/tidgrep
+lib/tidgrep/cli.rb
 lib/tidtools.rb
 script/console
 script/destroy
 script/generate
 test/test_helper.rb
+test/test_tidgrep_cli.rb
 test/test_tidtools.rb

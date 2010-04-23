@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+#
+#  Created on 2010-4-23.
+#  Copyright (c) 2010. All rights reserved.
+
+require 'rubygems'
+require File.expand_path(File.dirname(__FILE__) + "/../lib/tidtools")
+require "tidgrep/cli"
+
+Tidgrep::CLI.execute(STDOUT, ARGV)
