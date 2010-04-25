@@ -100,10 +100,21 @@ module Tidgrep
 
       match_tiddles = 0
 
+      is_limit = false
+
       tiddles.each do |tiddle|
         next if (@title && tiddle.title !~ @title_regexp)
-        puts tiddle.title
+
         match_tiddles += 1
+
+        unless is_limit
+          puts tiddle.title
+
+          if (@is_comp && match_tiddles > 5)
+            is_limit = true
+            print ".\n.\n"
+          end
+        end
       end
 
       if (@report)
@@ -119,14 +130,29 @@ module Tidgrep
       search_tiddles = 0
       match_tiddles = 0
 
+      is_limit = false
+
       tiddles.each do |tiddle|
         next if (@title && tiddle.title !~ @title_regexp)
         search_tiddles += 1
 
         if (match? tiddle.content)
           match_tiddles += 1
-          puts "--- #{tiddle.title} --------------------"
-          puts tiddle.content
+
+          unless is_limit
+            puts "--- #{tiddle.title} --------------------"
+
+            unless @is_comp
+              puts tiddle.content
+            else
+              print tiddle.content.split(/\n/)[0..2].join("\n") + "\n.\n"
+            end
+
+            if (@is_comp && match_tiddles > 5)
+              is_limit = true
+              print ".\n.\n"
+            end
+          end
         end
       end
 
@@ -144,6 +170,8 @@ module Tidgrep
       search_tweets = 0
       match_tweets = 0
 
+      is_limit = false
+
       tiddles.each do |tiddle|
         next if (@title && tiddle.title !~ @title_regexp)
         is_match_tiddle = false
@@ -154,13 +182,25 @@ module Tidgrep
         tweets.each do |tweet|
           if (match? tweet)
             match_tweets += 1
-            unless is_match_tiddle
-              puts "--- #{tiddle.title} --------------------"
-              is_match_tiddle = true
-            else
-              puts "----\n"
+            unless is_limit
+              unless is_match_tiddle
+                puts "--- #{tiddle.title} --------------------"
+                is_match_tiddle = true
+              else
+                puts "----\n"
+              end
+
+              unless @is_comp
+                print tweet
+              else
+                print tweet.split(/\n/)[0..2].join("\n") + "\n.\n"
+              end
+              
+              if (@is_comp && match_tweets > 5)
+                is_limit = true
+                print ".\n.\n"
+              end
             end
-            print "#{tweet}"
           end
         end
       end
