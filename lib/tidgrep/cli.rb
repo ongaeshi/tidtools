@@ -3,6 +3,17 @@ require File.join(File.dirname(__FILE__), '../tidtools/tiddle')
 require 'optparse'
 
 module Tidgrep
+  # 圧縮表示時のパラメータ
+  MATCH_LINE_COMP_NUM = 5
+
+  MATCH_ONLY_TITLE_COMP_NUM = 5
+
+  MATCH_TIDDLE_LINE_NUM = 3
+  MATCH_TIDDLE_COMP_NUM = 5
+
+  MATCH_TWEET_LINE_NUM = 3
+  MATCH_TWEET_COMP_NUM = 5
+
   class Tidgrep
     def initialize
       @file_name = ENV['TIDGREP_PATH']
@@ -69,7 +80,7 @@ module Tidgrep
             unless is_limit
               puts "#{tiddle.title}:#{line_no}:#{line}"
 
-              if (@is_comp && match_lines > 5)
+              if (@is_comp && match_lines >= MATCH_LINE_COMP_NUM)
                 is_limit = true
                 print ".\n.\n"
               end
@@ -110,7 +121,7 @@ module Tidgrep
         unless is_limit
           puts tiddle.title
 
-          if (@is_comp && match_tiddles > 5)
+          if (@is_comp && match_tiddles >= MATCH_ONLY_TITLE_COMP_NUM)
             is_limit = true
             print ".\n.\n"
           end
@@ -145,10 +156,10 @@ module Tidgrep
             unless @is_comp
               puts tiddle.content
             else
-              print tiddle.content.split(/\n/)[0..2].join("\n") + "\n.\n"
+              print tiddle.content.split(/\n/)[0..(MATCH_TIDDLE_LINE_NUM - 1)].join("\n") + "\n.\n"
             end
 
-            if (@is_comp && match_tiddles > 5)
+            if (@is_comp && match_tiddles >= MATCH_TIDDLE_COMP_NUM)
               is_limit = true
               print ".\n.\n"
             end
@@ -193,10 +204,10 @@ module Tidgrep
               unless @is_comp
                 print tweet
               else
-                print tweet.split(/\n/)[0..2].join("\n") + "\n.\n"
+                print tweet.split(/\n/)[0..(MATCH_TWEET_LINE_NUM - 1)].join("\n") + "\n.\n"
               end
               
-              if (@is_comp && match_tweets > 5)
+              if (@is_comp && match_tweets >= MATCH_TWEET_COMP_NUM)
                 is_limit = true
                 print ".\n.\n"
               end
