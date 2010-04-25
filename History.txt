@@ -2,3 +2,10 @@
 
 * 1 major enhancement:
   * Initial release
+
+=== 0.0.3 xxxx-xx-xx
+
+* -mオプションを正式に実装(-m [line, tiddle, tweet])
+
+
+

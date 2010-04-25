@@ -18,7 +18,7 @@ module Tidgrep
       opt.on('-t TITLE', '--title TITLE', 'match title') {|v| @title = v }
       opt.on('-i', '--ignore', 'ignore case') {|v| @regexp_option |= Regexp::IGNORECASE }
       opt.on('-r', '--report', 'disp report') {|v| @report = true }
-      opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [line, tiddle, hr]') {|v| @match_rule = v }
+      opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [line, tiddle, tweet]') {|v| @match_rule = v }
       opt.parse!(arguments)
       
       @keyword = arguments[0]
@@ -114,7 +114,7 @@ module Tidgrep
       end
     end
 
-    def match_hr
+    def match_tweet
       tiddles = Tiddle.parse_sort_modified(@file_name)
 
       search_tweets = 0
@@ -159,8 +159,8 @@ module Tidgrep
           match_line
         when "tiddle"
           match_tiddle
-        when "hr"
-          match_hr
+        when "tweet"
+          match_tweet
         end
       else
         match_only_title
