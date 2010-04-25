@@ -10,6 +10,7 @@ module Tidgrep
       @regexp_option = 0
       @report = false
       @match_rule = "line"
+      @is_comp = false
     end
 
     def setupParam(stdout, arguments)
@@ -19,6 +20,7 @@ module Tidgrep
       opt.on('-i', '--ignore', 'ignore case') {|v| @regexp_option |= Regexp::IGNORECASE }
       opt.on('-r', '--report', 'disp report') {|v| @report = true }
       opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [line, tiddle, tweet]') {|v| @match_rule = v }
+      opt.on('-c', '--comp', 'compression disp') {|v| @is_comp = true; @report = true }
       opt.parse!(arguments)
       
       @title_regexp = @title && Regexp.new(@title, @regexp_option)
@@ -53,6 +55,8 @@ module Tidgrep
       search_lines = 0
       match_tiddles = 0
 
+      is_limit = false
+
       tiddles.each do |tiddle|
         next if (@title && tiddle.title !~ @title_regexp)
         is_match_tiddle = false
@@ -60,8 +64,18 @@ module Tidgrep
 
         tiddle.content.each_line do |line|
           if (match? line)
-            puts "#{tiddle.title}:#{line_no}:#{line}"
             match_lines += 1
+
+            unless is_limit
+              puts "#{tiddle.title}:#{line_no}:#{line}"
+
+              if (@is_comp && match_lines > 5)
+                is_limit = true
+                print ".\n.\n"
+              end
+            end
+              
+
             unless is_match_tiddle
               match_tiddles += 1
               is_match_tiddle = true
