@@ -156,7 +156,13 @@ module Tidgrep
             unless @is_comp
               puts tiddle.content
             else
-              print tiddle.content.split(/\n/)[0..(MATCH_TIDDLE_LINE_NUM - 1)].join("\n") + "\n.\n"
+              tiddle_a = tiddle.content.split(/\n/)
+
+              if (tiddle_a.size <= MATCH_TIDDLE_LINE_NUM)
+                print tiddle.content
+              else
+                print tiddle_a[0..(MATCH_TIDDLE_LINE_NUM - 1)].join("\n") + "\n.\n"
+              end
             end
 
             if (@is_comp && match_tiddles >= MATCH_TIDDLE_COMP_NUM)
@@ -204,7 +210,13 @@ module Tidgrep
               unless @is_comp
                 print tweet
               else
-                print tweet.split(/\n/)[0..(MATCH_TWEET_LINE_NUM - 1)].join("\n") + "\n.\n"
+                tweet_a = tweet.split(/\n/)
+                
+                if (tweet_a.size <= MATCH_TWEET_LINE_NUM)
+                  print tweet
+                else
+                  print tweet_a[0..(MATCH_TWEET_LINE_NUM - 1)].join("\n") + "\n.\n"
+                end
               end
               
               if (@is_comp && match_tweets >= MATCH_TWEET_COMP_NUM)
