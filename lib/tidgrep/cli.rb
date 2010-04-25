@@ -2,13 +2,16 @@ require File.join(File.dirname(__FILE__), '../tidtools/tiddle')
 require 'optparse'
 
 module Tidgrep
-  class CLI
-    def self.isValidOption(file_name, title, keyword)
+  class Tidgrep
+    def initialize
+    end
+
+    def isValidOption(file_name, title, keyword)
       return false if !file_name
       return title || keyword
     end
 
-    def self.execute(stdout, arguments=[])
+    def execute(stdout, arguments=[])
       title = nil
       regexp_option = 0
       file_name = ENV['TIDGREP_PATH']
@@ -23,7 +26,7 @@ module Tidgrep
       opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [grep, tiddle, hr]') {|v| match_rule = v; p match_rule }
       opt.parse!(arguments)
 
-      keyword = ARGV[0]
+      keyword = arguments[0]
 
       if (!isValidOption(file_name, title, keyword))
         puts opt.help
@@ -45,10 +48,13 @@ module Tidgrep
 
         if (content_regexp)
           tiddle.content.each_line do |line|
+#          tiddle.content.split(/----/).each do |line|
             if (content_regexp =~ line)
               case match_rule
               when "grep"
                 puts "#{tiddle.title}:#{line_no}:#{line}"
+#                print "#{line}"               
+#                print "----"
                 match_lines += 1
                 unless is_match_tiddle
                   match_tiddles += 1
@@ -63,6 +69,8 @@ module Tidgrep
                 end
                 puts "#{line}"
               when "hr"
+                print "#{line}"               
+                print "----"
               end
             end
             line_no += 1
@@ -85,6 +93,12 @@ module Tidgrep
         puts "match tiddles : #{match_tiddles}"
         puts "total tiddles : #{tiddles.size}"
       end
+    end
+  end
+
+  class CLI
+    def self.execute(stdout, arguments=[])
+      Tidgrep.new.execute(stdout, arguments)
     end
   end
 end
