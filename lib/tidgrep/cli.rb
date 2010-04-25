@@ -40,7 +40,7 @@ module Tidgrep
       tiddles = Tiddle.parse_sort_modified(@file_name)
 
       match_lines = 0
-      total_lines = 0
+      search_lines = 0
       match_tiddles = 0
 
       tiddles.each do |tiddle|
@@ -58,13 +58,13 @@ module Tidgrep
             end
           end
           line_no += 1
-          total_lines += 1
+          search_lines += 1
         end
       end
 
       if (@report)
         puts "------------------------------"
-        puts "search lines : #{total_lines}"
+        puts "search lines : #{search_lines}"
         puts "match lines : #{match_lines}"
         puts "total tiddles : #{tiddles.size}"
         puts "match tiddles : #{match_tiddles}"
@@ -90,9 +90,74 @@ module Tidgrep
     end
 
     def match_tiddle
+      # 未完成
+      tiddles = Tiddle.parse_sort_modified(@file_name)
+
+      match_lines = 0
+      search_lines = 0
+      match_tiddles = 0
+
+      tiddles.each do |tiddle|
+        next if (@title && tiddle.title !~ @title_regexp)
+        is_match_tiddle = false
+        line_no = 1
+
+        tiddle.content.each_line do |line|
+          if (@content_regexp =~ line)
+            match_lines += 1
+            unless is_match_tiddle
+              puts "--- #{tiddle.title} --------------------"
+              match_tiddles += 1
+              is_match_tiddle = true
+            end
+            puts "#{line}"
+          end
+          line_no += 1
+          search_lines += 1
+        end
+      end
+
+      if (@report)
+        puts "------------------------------"
+        puts "search lines : #{search_lines}"
+        puts "match lines : #{match_lines}"
+        puts "total tiddles : #{tiddles.size}"
+        puts "match tiddles : #{match_tiddles}"
+      end
     end
 
     def match_hr
+      tiddles = Tiddle.parse_sort_modified(@file_name)
+
+      search_tweets = 0
+      match_tweets = 0
+
+      tiddles.each do |tiddle|
+        next if (@title && tiddle.title !~ @title_regexp)
+        is_match_tiddle = false
+
+        tweets = tiddle.content.split(/^----+\n/)
+        search_tweets += tweets.size
+
+        tweets.each do |tweet|
+          if (@content_regexp =~ tweet)
+            match_tweets += 1
+            unless is_match_tiddle
+              puts "--- #{tiddle.title} --------------------"
+              is_match_tiddle = true
+            else
+              puts "----\n"
+            end
+            print "#{tweet}"
+          end
+        end
+      end
+
+      if (@report)
+        puts "------------------------------"
+        puts "search tweets : #{search_tweets}"
+        puts "match tweets : #{match_tweets}"
+      end
     end
 
     def execute(stdout, arguments=[])
