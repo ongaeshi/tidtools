@@ -4,45 +4,45 @@ require 'optparse'
 module Tidgrep
   class Tidgrep
     def initialize
+      @file_name = ENV['TIDGREP_PATH']
+      @title = nil
+      @regexp_option = 0
+      @report = false
+      @match_rule = "grep"
+      @keyword = nil
     end
 
-    def isValidOption(file_name, title, keyword)
-      return false if !file_name
-      return title || keyword
+    def validOption?
+      return false if !@file_name
+      return @title || @keyword
     end
 
     def execute(stdout, arguments=[])
-      title = nil
-      regexp_option = 0
-      file_name = ENV['TIDGREP_PATH']
-      report = false
-      match_rule = "grep"
-
       opt = OptionParser.new('tidgrep [option] keyword')
-      opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| file_name = v }
-      opt.on('-t TITLE', '--title TITLE', 'match title') {|v| title = v }
-      opt.on('-i', '--ignore', 'ignore case') {|v| regexp_option |= Regexp::IGNORECASE }
-      opt.on('-r', '--report', 'disp report') {|v| report = true }
-      opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [grep, tiddle, hr]') {|v| match_rule = v; p match_rule }
+      opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| @file_name = v }
+      opt.on('-t TITLE', '--title TITLE', 'match title') {|v| @title = v }
+      opt.on('-i', '--ignore', 'ignore case') {|v| @regexp_option |= Regexp::IGNORECASE }
+      opt.on('-r', '--report', 'disp report') {|v| @report = true }
+      opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [grep, tiddle, hr]') {|v| @match_rule = v }
       opt.parse!(arguments)
 
-      keyword = arguments[0]
+      @keyword = arguments[0]
 
-      if (!isValidOption(file_name, title, keyword))
+      unless validOption?
         puts opt.help
         exit
       end
 
-      tiddles = Tiddle.parse_sort_modified(file_name)
+      tiddles = Tiddle.parse_sort_modified(@file_name)
       match_lines = 0
       total_lines = 0
       match_tiddles = 0
 
-      title_regexp = title && Regexp.new(title, regexp_option)
-      content_regexp = keyword && Regexp.new(keyword, regexp_option)
+      title_regexp = @title && Regexp.new(@title, @regexp_option)
+      content_regexp = @keyword && Regexp.new(@keyword, @regexp_option)
 
       tiddles.each do |tiddle|
-        next if (title && tiddle.title !~ title_regexp)
+        next if (@title && tiddle.title !~ title_regexp)
         is_match_tiddle = false
         line_no = 1
 
@@ -50,7 +50,7 @@ module Tidgrep
           tiddle.content.each_line do |line|
 #          tiddle.content.split(/----/).each do |line|
             if (content_regexp =~ line)
-              case match_rule
+              case @match_rule
               when "grep"
                 puts "#{tiddle.title}:#{line_no}:#{line}"
 #                print "#{line}"               
@@ -84,7 +84,7 @@ module Tidgrep
 
       end
 
-      if (report)
+      if (@report)
         puts "------------------------------"
         if (content_regexp)
           puts "match lines : #{match_lines}"
