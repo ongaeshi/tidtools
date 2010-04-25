@@ -1,11 +1,11 @@
+=== 0.0.3 xxxx-xx-xx
+
+* 引数に複数の正規表現を渡して、and検索を可能に
+
+* -mオプションを正式に実装(-m [line, tiddle, tweet])
+
 === 0.0.1 2010-04-23
 
 * 1 major enhancement:
   * Initial release
-
-=== 0.0.3 xxxx-xx-xx
-
-* -mオプションを正式に実装(-m [line, tiddle, tweet])
-
-
 

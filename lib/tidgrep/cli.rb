@@ -21,9 +21,12 @@ module Tidgrep
       opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [line, tiddle, tweet]') {|v| @match_rule = v }
       opt.parse!(arguments)
       
-      @keyword = arguments[0]
       @title_regexp = @title && Regexp.new(@title, @regexp_option)
-      @content_regexp = @keyword && Regexp.new(@keyword, @regexp_option)
+
+      @content_regexps = []
+      arguments.each do |keyword|
+        @content_regexps << Regexp.new(keyword, @regexp_option)
+      end
 
       unless validOption?
         puts opt.help
@@ -33,7 +36,14 @@ module Tidgrep
 
     def validOption?
       return false if !@file_name
-      return @title || @keyword
+      return @title || @content_regexps.size > 0
+    end
+
+    def match?(target)
+      @content_regexps.each do |content_regexp|
+        return false if content_regexp !~ target
+      end
+      return true
     end
 
     def match_line
@@ -49,7 +59,7 @@ module Tidgrep
         line_no = 1
 
         tiddle.content.each_line do |line|
-          if (@content_regexp =~ line)
+          if (match? line)
             puts "#{tiddle.title}:#{line_no}:#{line}"
             match_lines += 1
             unless is_match_tiddle
@@ -99,7 +109,7 @@ module Tidgrep
         next if (@title && tiddle.title !~ @title_regexp)
         search_tiddles += 1
 
-        if (@content_regexp =~ tiddle.content)
+        if (match? tiddle.content)
           match_tiddles += 1
           puts "--- #{tiddle.title} --------------------"
           puts tiddle.content
@@ -128,7 +138,7 @@ module Tidgrep
         search_tweets += tweets.size
 
         tweets.each do |tweet|
-          if (@content_regexp =~ tweet)
+          if (match? tweet)
             match_tweets += 1
             unless is_match_tiddle
               puts "--- #{tiddle.title} --------------------"
@@ -153,7 +163,7 @@ module Tidgrep
       setupParam(stdout, arguments)
       
       # マッチルールごとに処理を変える
-      if (@content_regexp) 
+      if (@content_regexps.size > 0) 
         case @match_rule
         when "line"
           match_line
