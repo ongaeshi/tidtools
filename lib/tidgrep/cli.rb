@@ -90,38 +90,26 @@ module Tidgrep
     end
 
     def match_tiddle
-      # 未完成
       tiddles = Tiddle.parse_sort_modified(@file_name)
 
-      match_lines = 0
-      search_lines = 0
+      search_tiddles = 0
       match_tiddles = 0
 
       tiddles.each do |tiddle|
         next if (@title && tiddle.title !~ @title_regexp)
-        is_match_tiddle = false
-        line_no = 1
+        search_tiddles += 1
 
-        tiddle.content.each_line do |line|
-          if (@content_regexp =~ line)
-            match_lines += 1
-            unless is_match_tiddle
-              puts "--- #{tiddle.title} --------------------"
-              match_tiddles += 1
-              is_match_tiddle = true
-            end
-            puts "#{line}"
-          end
-          line_no += 1
-          search_lines += 1
+        if (@content_regexp =~ tiddle.content)
+          match_tiddles += 1
+          puts "--- #{tiddle.title} --------------------"
+          puts tiddle.content
         end
       end
 
       if (@report)
         puts "------------------------------"
-        puts "search lines : #{search_lines}"
-        puts "match lines : #{match_lines}"
         puts "total tiddles : #{tiddles.size}"
+        puts "search tiddles : #{search_tiddles}"
         puts "match tiddles : #{match_tiddles}"
       end
     end
