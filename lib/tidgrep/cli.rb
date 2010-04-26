@@ -15,35 +15,19 @@ module Tidgrep
   MATCH_TWEET_COMP_NUM = 5
 
   class Tidgrep
-    def initialize
-      @file_name = ENV['TIDGREP_PATH']
-      @title = nil
-      @regexp_option = 0
-      @report = false
-      @match_rule = "line"
-      @is_comp = false
-    end
+    def initialize(stdout, file_name, title, regexp_option, report, match_rule, is_comp, keywords)
+      @file_name = file_name
+      @title = title
+      @regexp_option = regexp_option
+      @report = report
+      @match_rule = match_rule
+      @is_comp = is_comp
 
-    def setupParam(stdout, arguments)
-      opt = OptionParser.new('tidgrep [option] keyword')
-      opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| @file_name = v }
-      opt.on('-t TITLE', '--title TITLE', 'match title') {|v| @title = v }
-      opt.on('-i', '--ignore', 'ignore case') {|v| @regexp_option |= Regexp::IGNORECASE }
-      opt.on('-r', '--report', 'disp report') {|v| @report = true }
-      opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [line, tiddle, tweet]') {|v| @match_rule = v }
-      opt.on('-c', '--comp', 'compression disp') {|v| @is_comp = true; @report = true }
-      opt.parse!(arguments)
-      
       @title_regexp = @title && Regexp.new(@title, @regexp_option)
 
       @content_regexps = []
-      arguments.each do |keyword|
+      keywords.each do |keyword|
         @content_regexps << Regexp.new(keyword, @regexp_option)
-      end
-
-      unless validOption?
-        puts opt.help
-        exit
       end
     end
 
@@ -235,11 +219,7 @@ module Tidgrep
       end
     end
 
-    def execute(stdout, arguments=[])
-      # パラメータの設定
-      setupParam(stdout, arguments)
-      
-      # マッチルールごとに処理を変える
+    def execute
       if (@content_regexps.size > 0) 
         case @match_rule
         when "line"
@@ -258,7 +238,37 @@ module Tidgrep
 
   class CLI
     def self.execute(stdout, arguments=[])
-      Tidgrep.new.execute(stdout, arguments)
+      file_name = ENV['TIDGREP_PATH']
+      title = nil
+      regexp_option = 0
+      report = false 
+      match_rule = "line"
+      is_comp = false
+      
+      opt = OptionParser.new('tidgrep [option] keyword')
+      opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| file_name = v }
+      opt.on('-t TITLE', '--title TITLE', 'match title') {|v| title = v }
+      opt.on('-i', '--ignore', 'ignore case') {|v| regexp_option |= Regexp::IGNORECASE }
+      opt.on('-r', '--report', 'disp report') {|v| report = true }
+      opt.on('-m MATCH_RULE', '--match MATCH_RULE', 'match rule [line, tiddle, tweet]') {|v| match_rule = v }
+      opt.on('-c', '--comp', 'compression disp') {|v| is_comp = true; report = true }
+      opt.parse!(arguments)
+
+      obj = Tidgrep.new(stdout,
+                        file_name,
+                        title,
+                        regexp_option,
+                        report,
+                        match_rule,
+                        is_comp,
+                        arguments)
+
+      unless obj.validOption?
+        puts opt.help
+        exit
+      end
+      
+      obj.execute
     end
   end
 end
