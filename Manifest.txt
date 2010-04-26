@@ -4,12 +4,15 @@ PostInstall.txt
 README.rdoc
 Rakefile
 bin/tidgrep
+bin/twgrep
 lib/tidgrep/cli.rb
 lib/tidtools.rb
 lib/tidtools/tiddle.rb
+lib/twgrep/cli.rb
 script/console
 script/destroy
 script/generate
 test/test_helper.rb
 test/test_tidgrep_cli.rb
 test/test_tidtools.rb
+test/test_twgrep_cli.rb
