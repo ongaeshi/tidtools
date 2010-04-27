@@ -11,6 +11,7 @@ module Twgrep
       report = false 
       match_rule = "tweet"
       is_comp = false
+      kcode = Platform.get_shell_kcode
       
       opt = OptionParser.new('twgrep [option] keyword')
       opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| file_name = v }
@@ -26,7 +27,8 @@ module Twgrep
                                  report,
                                  match_rule,
                                  is_comp,
-                                 arguments)
+                                 arguments,
+                                 kcode)
 
       unless obj.validOption? && arguments.size > 0
         puts opt.help

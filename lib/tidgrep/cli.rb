@@ -1,33 +1,37 @@
 # -*- coding: utf-8 -*-
 require File.join(File.dirname(__FILE__), '../tidtools/tiddle')
+require File.join(File.dirname(__FILE__), '../tidtools/platform')
 require 'optparse'
+require 'kconv'
 
 module Tidgrep
-  # 圧縮表示時のパラメータ
-  MATCH_LINE_COMP_NUM = 5
-
-  MATCH_ONLY_TITLE_COMP_NUM = 5
-
-  MATCH_TIDDLE_LINE_NUM = 3
-  MATCH_TIDDLE_COMP_NUM = 5
-
-  MATCH_TWEET_LINE_NUM = 3
-  MATCH_TWEET_COMP_NUM = 5
-
   class Tidgrep
-    def initialize(stdout, file_name, title, regexp_option, report, match_rule, is_comp, keywords)
+    # 圧縮表示時のパラメータ
+    MATCH_LINE_COMP_NUM = 5
+
+    MATCH_ONLY_TITLE_COMP_NUM = 5
+
+    MATCH_TIDDLE_LINE_NUM = 3
+    MATCH_TIDDLE_COMP_NUM = 5
+
+    MATCH_TWEET_LINE_NUM = 3
+    MATCH_TWEET_COMP_NUM = 5
+
+    def initialize(stdout, file_name, title, regexp_option, report, match_rule, is_comp, keywords, kcode)
+      @stdout = stdout
       @file_name = file_name
       @title = title
       @regexp_option = regexp_option
       @report = report
       @match_rule = match_rule
       @is_comp = is_comp
+      @kcode = kcode
 
       @title_regexp = @title && Regexp.new(@title, @regexp_option)
 
       @content_regexps = []
       keywords.each do |keyword|
-        @content_regexps << Regexp.new(keyword, @regexp_option)
+        @content_regexps << Regexp.new(self.kconv(keyword), @regexp_option)
       end
     end
 
@@ -41,6 +45,22 @@ module Tidgrep
         return false if content_regexp !~ target
       end
       return true
+    end
+
+    def kconv(str)
+      if (@kcode != Kconv::UTF8)
+        str.kconv(@kconv, Kconv::UTF8)
+      else
+        str
+      end
+    end
+
+    def print(msg)
+      @stdout.print self.kconv msg
+    end
+
+    def puts(msg)
+      @stdout.puts self.kconv msg
     end
 
     def match_line
@@ -244,6 +264,7 @@ module Tidgrep
       report = false 
       match_rule = "line"
       is_comp = false
+      kcode = Platform.get_shell_kcode
       
       opt = OptionParser.new('tidgrep [option] keyword')
       opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| file_name = v }
@@ -261,7 +282,8 @@ module Tidgrep
                         report,
                         match_rule,
                         is_comp,
-                        arguments)
+                        arguments,
+                        kcode)
 
       unless obj.validOption?
         puts opt.help
