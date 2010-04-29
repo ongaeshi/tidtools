@@ -31,7 +31,7 @@ module Tidgrep
 
       @content_regexps = []
       keywords.each do |keyword|
-        @content_regexps << Regexp.new(self.kconv(keyword), @regexp_option)
+        @content_regexps << Regexp.new(kcode2utf(keyword), @regexp_option)
       end
     end
 
@@ -47,20 +47,28 @@ module Tidgrep
       return true
     end
 
-    def kconv(str)
+    def kcode2utf(str)
       if (@kcode != Kconv::UTF8)
-        str.kconv(@kconv, Kconv::UTF8)
+        str.kconv(Kconv::UTF8, @kcode)
+      else
+        str
+      end
+    end
+
+    def utf2kcode(str)
+      if (@kcode != Kconv::UTF8)
+        str.kconv(@kcode, Kconv::UTF8)
       else
         str
       end
     end
 
     def print(msg)
-      @stdout.print self.kconv msg
+      @stdout.print utf2kcode(msg)
     end
 
     def puts(msg)
-      @stdout.puts self.kconv msg
+      @stdout.puts utf2kcode(msg)
     end
 
     def match_line
