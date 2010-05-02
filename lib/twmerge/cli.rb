@@ -1,42 +1,29 @@
+# -*- coding: utf-8 -*-
+require File.join(File.dirname(__FILE__), '../tidtools/tiddle')
 require 'optparse'
 
 module Twmerge
   class CLI
     def self.execute(stdout, arguments=[])
+      file_name = ENV['TIDGREP_PATH']
+      title = "Tweet - New"
+        
+      opt = OptionParser.new('twmerge merge_file')
+      opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| file_name = v }
+      opt.on('-t TITLE', '--title TITLE', 'origin tiddle title') {|v| title = v }
+      opt.parse!(arguments)
 
-      # NOTE: the option -p/--path= is given as an example, and should be replaced in your application.
+      tiddles = Tiddle.parse(file_name)
+      origin = nil              # マージ元ファイル
 
-      options = {
-        :path     => '~'
-      }
-      mandatory_options = %w(  )
-
-      parser = OptionParser.new do |opts|
-        opts.banner = <<-BANNER.gsub(/^          /,'')
-          This application is wonderful because...
-
-          Usage: #{File.basename($0)} [options]
-
-          Options are:
-        BANNER
-        opts.separator ""
-        opts.on("-p", "--path PATH", String,
-                "This is a sample message.",
-                "For multiple lines, add more strings.",
-                "Default: ~") { |arg| options[:path] = arg }
-        opts.on("-h", "--help",
-                "Show this help message.") { stdout.puts opts; exit }
-        opts.parse!(arguments)
-
-        if mandatory_options && mandatory_options.find { |option| options[option.to_sym].nil? }
-          stdout.puts opts; exit
+      tiddles.each do |tiddle|
+        if (tiddle.title == title) # 正規表現じゃないよ
+          origin = tiddle.content
+          break
         end
       end
 
-      path = options[:path]
-
-      # do stuff
-      stdout.puts "To update this executable, look in lib/twmerge/cli.rb"
+      print origin
     end
   end
 end
