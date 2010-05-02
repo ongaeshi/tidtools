@@ -13,6 +13,7 @@ module Twmerge
       opt.on('-t TITLE', '--title TITLE', 'origin tiddle title') {|v| title = v }
       opt.parse!(arguments)
 
+      # マージ元ファイルを取得
       tiddles = Tiddle.parse(file_name)
       origin = nil              # マージ元ファイル
 
@@ -23,7 +24,14 @@ module Twmerge
         end
       end
 
-      print origin
+      # マージするファイルを取得
+      merge = nil
+
+      open(arguments[0]) do |file|
+        merge = file.read
+      end
+      
+      puts merge
     end
   end
 end
