@@ -27,15 +27,21 @@ module Twmerge
       # マージするファイルを取得
       merge = nil
       open(arguments[0]) do |file|
-        merge = file.read
+        merge = file.read.split("\n")
       end
 
-      # 5つ以上の水平線を4つにそろえる
-      merge.each_line do |line|
-        puts line.sub(/^----+$/, "----")
+      merge.each_with_index do |line, index|
+        # 5つ以上の水平線を4つにそろえる
+        merge[index] = merge[index].sub(/^----+$/, "----")
+
+        # 水平線手前の日付表示に装飾を付ける
+        if (line =~ /^----+$/ and index > 0)
+          merge[index - 1] = "~~@@color(gray):" + merge[index - 1] + "@@~~"
+        end
       end
 
-      # 
+      # デバッグ表示
+      merge.each {|line| puts line}
     end
   end
 end
