@@ -26,12 +26,16 @@ module Twmerge
 
       # マージするファイルを取得
       merge = nil
-
       open(arguments[0]) do |file|
         merge = file.read
       end
-      
-      puts merge
+
+      # 5つ以上の水平線を4つにそろえる
+      merge.each_line do |line|
+        puts line.sub(/^----+$/, "----")
+      end
+
+      # 
     end
   end
 end
