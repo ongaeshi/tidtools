@@ -34,38 +34,13 @@ module Twmerge
         end
       end
 
-      # つぶやきに変換
-#      Tweet.merge(origin, merge.join("\n"))
-      
-#       tweets = Tweet.parse_from_text(origin)
-#       tweets.each do |elem|
-#         puts elem.content, "----"
-#       end
-      
-      tweets = Tweet.parse_from_text(merge.join("\n"))
-#      tweets += Tweet.parse_from_text(merge.join("\n"))
+      # マージ
+      tweets = Tweet.merge(origin, merge.join("\n"))
+
+      # 結果を表示
       tweets.each do |elem|
         puts elem.content, "----"
       end
-
-#       # 日付順にソート
-#       tweets = tweets.sort {|a, b|
-#         # 日付の書いていないつぶやきは先頭に移動させ、早い段階で問題を見つけられるようにする
-#         if (a.time_stamp.nil? and b.time_stamp.nil?)
-#           0
-#         elsif (b.time_stamp.nil?)
-#           -1
-#         elsif (a.time_stamp.nil?)
-#           1
-#         else
-#           a.time_stamp <=> b.time_stamp
-#         end
-#       }.reverse
-
-#       # テスト表示
-#       tweets.each do |elem|
-#         puts elem.content, "----"
-#       end
     end
   end
 end

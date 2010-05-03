@@ -12,17 +12,29 @@ class Tweet
 
   # つぶやき形式のテキストをマージする
   def self.merge(origin, merge)
-    origin = Tweet.parse_from_text(origin)
-    tweets = Tweet.parse_from_text(merge)
+    origin_t = Tweet.parse_from_text(origin)
+    merge_t = Tweet.parse_from_text(merge)
 
-    tweets.each do |tweet|
-      index = 0
-      while true
-        array
-      end
-      
-      tweet.time_stamp
+    merge_t.each do |tweet|
+      origin_t.insert(find_insert_pos(origin_t, tweet), tweet)
     end
+
+    origin_t
+  end
+
+  # ソートされたつぶやきの配列に対して、あるつぶやきの挿入位置を返す
+  def self.find_insert_pos(tweets, tweet)
+    return 0 if tweet.time_stamp.nil?
+    
+    tweets.each_index do |index|
+      if (tweets[index].time_stamp.nil?)
+        next
+      elsif (tweet.time_stamp >= tweets[index].time_stamp)
+        return index
+      end
+    end
+
+    return tweets.size
   end
 
   # つぶやき形式の文字列を渡すと、Tweet型の配列を返す
