@@ -61,7 +61,7 @@ module Twmerge
 
       # テスト表示
       tweets.each do |elem|
-        puts elem.time_stamp, elem.content, "----"
+        puts elem.content, "----"
       end
     end
   end

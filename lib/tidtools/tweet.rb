@@ -13,15 +13,32 @@ class Tweet
   # つぶやき形式の文字列を渡すと、Tweet型の配列を返す
   def self.parse_from_text(text)
     tweets = []
+    array = text.split("\n")
 
-    text.split(/^----+\n/).each do |elem|
-      # 文字列終端の----をカット(一番最後に残る可能性がある)
-      elem = elem.sub(/^----+\n?\Z/, "")
+    index = 0
+    start_index = 0
+    is_pre = false
+    
+    while true
+      if (array[index] =~ /^\{\{\{/)
+        is_pre = true
+      end
       
-      # つぶやきの作成
-      tweets.push Tweet.new(parse_time_stamp(elem), elem)
-    end
+      if (!is_pre and array[index] =~ /^----+/)
+        text = array[start_index...index].join("\n")
+        tweets.push Tweet.new(parse_time_stamp(text), text)
+        start_index = index + 1
+      end
+      
+      if (array[index] =~ /^\}\}\}/)
+        is_pre = false
+      end
 
+      index += 1
+
+      break if (index >= array.size)
+    end
+      
     tweets
   end
 
@@ -30,7 +47,6 @@ class Tweet
 
     if (str)
       ary = ParseDate::parsedate(str)
-#      p ary
       if (ary[0])
         Time::local(*ary[0..4])
       else
