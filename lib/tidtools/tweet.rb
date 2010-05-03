@@ -26,11 +26,18 @@ class Tweet
   end
 
   def self.parse_time_stamp(text)
-    ary = ParseDate::parsedate(text.split(/\n/)[-1])
-    Time::local(*ary[0..4])
-  end
+    str = text.split(/\n/)[-1]
 
-  def self.div_tweets(text)
-    text.split(/^----+\n/)
+    if (str)
+      ary = ParseDate::parsedate(str)
+#      p ary
+      if (ary[0])
+        Time::local(*ary[0..4])
+      else
+        nil
+      end
+    else
+      nil
+    end
   end
 end

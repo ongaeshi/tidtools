@@ -42,15 +42,15 @@ module Twmerge
       end
 
       # つぶやきに変換
-#      tweets = Tweet.div_tweets(origin)
-#      tweets << Tweet.div_tweets(merge.join("\n"))
-#      tweets.join("#####################\n").each {|l| puts l}
-
       tweets = Tweet.parse_from_text(origin)
       tweets += Tweet.parse_from_text(merge.join("\n"))
 
+      # 日付順にソート
       tweets = tweets.sort {|a, b|
-        if (b.time_stamp.nil?)
+        # 日付の書いていないつぶやきは先頭に移動させ、早い段階で問題を見つけられるようにする
+        if (a.time_stamp.nil? and b.time_stamp.nil?)
+          0
+        elsif (b.time_stamp.nil?)
           -1
         elsif (a.time_stamp.nil?)
           1
@@ -59,8 +59,9 @@ module Twmerge
         end
       }.reverse
 
+      # テスト表示
       tweets.each do |elem|
-        puts elem.time_stamp, elem.content
+        puts elem.time_stamp, elem.content, "----"
       end
     end
   end
