@@ -10,6 +10,21 @@ class Tweet
     @content = content
   end
 
+  # つぶやき形式のテキストをマージする
+  def self.merge(origin, merge)
+    origin = Tweet.parse_from_text(origin)
+    tweets = Tweet.parse_from_text(merge)
+
+    tweets.each do |tweet|
+      index = 0
+      while true
+        array
+      end
+      
+      tweet.time_stamp
+    end
+  end
+
   # つぶやき形式の文字列を渡すと、Tweet型の配列を返す
   def self.parse_from_text(text)
     tweets = []
@@ -36,7 +51,14 @@ class Tweet
 
       index += 1
 
-      break if (index >= array.size)
+      if (index >= array.size)
+        if (index > start_index)
+          text = array[start_index..index].join("\n")
+          tweets.push Tweet.new(parse_time_stamp(text), text)
+        end
+
+        break
+      end
     end
       
     tweets
