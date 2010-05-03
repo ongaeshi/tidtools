@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 require File.join(File.dirname(__FILE__), '../tidtools/tiddle')
+require File.join(File.dirname(__FILE__), '../tidtools/tweet')
 require 'optparse'
 
 module Twmerge
@@ -40,8 +41,27 @@ module Twmerge
         end
       end
 
-      # デバッグ表示
-      merge.each {|line| puts line}
+      # つぶやきに変換
+#      tweets = Tweet.div_tweets(origin)
+#      tweets << Tweet.div_tweets(merge.join("\n"))
+#      tweets.join("#####################\n").each {|l| puts l}
+
+      tweets = Tweet.parse_from_text(origin)
+      tweets += Tweet.parse_from_text(merge.join("\n"))
+
+      tweets = tweets.sort {|a, b|
+        if (b.time_stamp.nil?)
+          -1
+        elsif (a.time_stamp.nil?)
+          1
+        else
+          a.time_stamp <=> b.time_stamp
+        end
+      }.reverse
+
+      tweets.each do |elem|
+        puts elem.time_stamp, elem.content
+      end
     end
   end
 end
