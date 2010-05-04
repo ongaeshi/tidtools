@@ -9,33 +9,17 @@ module Twmerge
       opt = OptionParser.new('twmerge origin_file add_file')
       opt.parse!(arguments)
 
-      # マージ元ファイルを取得
-      origin = nil              # マージ元ファイル
-      open(arguments[0]) do |file|
-        origin = file.read
+      if (arguments.size != 2)
+        puts opt.help
+        exit
       end
-
-      # マージするファイルを取得
-      merge = nil
-      open(arguments[1]) do |file|
-        merge = file.read.split("\n")
-      end
-
-      merge.each_with_index do |line, index|
-        # 5つ以上の水平線を4つにそろえる
-        merge[index] = merge[index].sub(/^----+$/, "----")
-
-        # 水平線手前の日付表示に装飾を付ける
-        if (line =~ /^----+$/ and index > 0)
-          ary = ParseDate::parsedate(merge[index - 1])
-          if (ary[0])           # 日付表示の場合のみ
-            merge[index - 1] = "~~@@color(gray):" + merge[index - 1] + "@@~~"
-          end
-        end
-      end
-
+      
+      # テキストを取得
+      origin = open(arguments[0]).read
+      add = Tweet.decorate(open(arguments[1]).read)
+      
       # マージ
-      tweets = Tweet.merge(origin, merge.join("\n"))
+      tweets = Tweet.merge(origin, add)
 
       # 結果を表示
       tweets.each do |elem|

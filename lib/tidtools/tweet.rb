@@ -9,13 +9,33 @@ class Tweet
     @time_stamp = time_stamp
     @content = content
   end
+  
+  # テキストをつぶやき形式に整形する
+  def self.decorate(text)
+    array = text.split("\n")
+
+    array.each_with_index do |line, index|
+      # 5つ以上の水平線を4つにそろえる
+      array[index] = array[index].sub(/^----+$/, "----")
+
+      # 水平線手前の日付表示に装飾を付ける
+      if (line =~ /^----+$/ and index > 0)
+        ary = ParseDate::parsedate(array[index - 1])
+        if (ary[0])           # 日付表示の場合のみ
+          array[index - 1] = "~~@@color(gray):" + array[index - 1] + "@@~~"
+        end
+      end
+    end
+
+    array.join("\n")
+  end
 
   # つぶやき形式のテキストをマージする
-  def self.merge(origin, merge)
+  def self.merge(origin, add)
     origin_t = Tweet.parse_from_text(origin)
-    merge_t = Tweet.parse_from_text(merge)
+    add_t = Tweet.parse_from_text(add)
 
-    merge_t.each do |tweet|
+    add_t.each do |tweet|
       origin_t.insert(find_insert_pos(origin_t, tweet), tweet)
     end
 
