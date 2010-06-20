@@ -266,7 +266,7 @@ module Tidgrep
 
   class CLI
     def self.execute(stdout, arguments=[])
-      file_name = ENV['TIDGREP_PATH']
+      file_name = ENV['TIDDLYWIKI_PATH']
       title = nil
       regexp_option = 0
       report = false 
