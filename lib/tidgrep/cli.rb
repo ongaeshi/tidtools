@@ -17,9 +17,10 @@ module Tidgrep
     MATCH_TWEET_LINE_NUM = 3
     MATCH_TWEET_COMP_NUM = 5
 
-    def initialize(stdout, file_name, title, regexp_option, report, match_rule, is_comp, keywords, kcode)
+    def initialize(stdout, file_names, file_no, title, regexp_option, report, match_rule, is_comp, keywords, kcode)
       @stdout = stdout
-      @file_name = file_name
+      @file_names = file_names
+      @file_no = file_no
       @title = title
       @regexp_option = regexp_option
       @report = report
@@ -36,7 +37,7 @@ module Tidgrep
     end
 
     def validOption?
-      return false if !@file_name
+      return false if @file_names.empty?
       return @title || @content_regexps.size > 0
     end
 
@@ -71,8 +72,23 @@ module Tidgrep
       @stdout.puts utf2kcode(msg)
     end
 
+    def create_tiddles
+      tiddles = []
+      
+      if (@file_no <= 0)
+        @file_names.each do |file_name|
+          tiddles.concat Tiddle.parse_sort_modified(file_name)
+        end
+      elsif (@file_no <= @file_names.size)
+        tiddles.concat Tiddle.parse_sort_modified(@file_names[@file_no - 1])        
+      end
+
+      tiddles
+    end
+    private :create_tiddles
+
     def match_line
-      tiddles = Tiddle.parse_sort_modified(@file_name)
+      tiddles = create_tiddles
 
       match_lines = 0
       search_lines = 0
@@ -119,7 +135,7 @@ module Tidgrep
     end
 
     def match_only_title
-      tiddles = Tiddle.parse_sort_modified(@file_name)
+      tiddles = create_tiddles
 
       match_tiddles = 0
 
@@ -148,7 +164,7 @@ module Tidgrep
     end
 
     def match_tiddle
-      tiddles = Tiddle.parse_sort_modified(@file_name)
+      tiddles = create_tiddles
 
       search_tiddles = 0
       match_tiddles = 0
@@ -194,7 +210,7 @@ module Tidgrep
     end
 
     def match_tweet
-      tiddles = Tiddle.parse_sort_modified(@file_name)
+      tiddles = create_tiddles
 
       search_tweets = 0
       match_tweets = 0
@@ -266,7 +282,8 @@ module Tidgrep
 
   class CLI
     def self.execute(stdout, arguments=[])
-      file_name = ENV['TIDDLYWIKI_PATH']
+      file_names = ENV['TIDDLYWIKI_PATHS'].split
+      file_no = 0
       title = nil
       regexp_option = 0
       report = false 
@@ -275,7 +292,8 @@ module Tidgrep
       kcode = Platform.get_shell_kcode
       
       opt = OptionParser.new('tidgrep [option] keyword')
-      opt.on('-f FILE_NAME', '--filename FILE_NAME', 'TiddlyWiki file name') {|v| file_name = v }
+      opt.on('-f TIDDLYWIKI_PATHS', '--filename TIDDLYWIKI_PATHS', 'TiddlyWiki path names') {|v| file_names = v.split }
+      opt.on('-n SELECT_NO', '--fileno SELECT_NO', 'file select number. (0 is all. 1,2,3,4.. is select only one.)') {|v| file_no = v.to_i }
       opt.on('-t TITLE', '--title TITLE', 'match title') {|v| title = v }
       opt.on('-i', '--ignore', 'ignore case') {|v| regexp_option |= Regexp::IGNORECASE }
       opt.on('-r', '--report', 'disp report') {|v| report = true }
@@ -284,7 +302,8 @@ module Tidgrep
       opt.parse!(arguments)
 
       obj = Tidgrep.new(stdout,
-                        file_name,
+                        file_names,
+                        file_no,
                         title,
                         regexp_option,
                         report,
