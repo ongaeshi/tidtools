@@ -17,6 +17,7 @@ module Twgrep
       opt = OptionParser.new('twgrep [option] keyword')
       opt.on('-f TIDDLYWIKI_PATHS', '--filename TIDDLYWIKI_PATHS', 'TiddlyWiki path names') {|v| file_names = v.split }
       opt.on('-n SELECT_NO', '--fileno SELECT_NO', 'file select number. (0 is all. 1,2,3,4.. is select only one.)') {|v| file_no = v.to_i }
+      opt.on('-t TITLE', '--title TITLE', 'match title') {|v| title = v }
       opt.on('-i', '--ignore', 'ignore case') {|v| regexp_option |= Regexp::IGNORECASE }
       opt.on('-r', '--report', 'disp report') {|v| report = true }
       opt.on('-c', '--comp', 'compression disp') {|v| is_comp = true; report = true }
