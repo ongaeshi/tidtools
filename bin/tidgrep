@@ -9,7 +9,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../lib/tidtools")
 require "tidgrep/cli"
 
 # バージョン番号
-Version = "0.0.4"
+Version = "0.0.9"
 
 # コマンドの実行
 Tidgrep::CLI.execute(STDOUT, ARGV)
