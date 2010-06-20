@@ -59,6 +59,13 @@ class Tiddle
 
   # tiddleの内容を取得
   def self.content(tiddle)
+    data = content1(tiddle)
+    data.gsub!(/\\n/, "\n")
+    data
+  end
+
+  # tiddleの内容を取得(処理1 HTMLから取り出し)
+  def self.content1(tiddle)
     pre = tiddle.search("pre")
 
     if (pre.size > 0)
@@ -67,6 +74,7 @@ class Tiddle
       tiddle.inner_html
     end
   end
+  private_class_method :content1
 
   # 時刻に変換
   def self.convtime(str)
