@@ -7,6 +7,7 @@ bin/tidgrep
 bin/twgrep
 bin/twmerge
 lib/tidgrep/cli.rb
+lib/tidgrep/tidgrep.rb
 lib/tidtools.rb
 lib/tidtools/platform.rb
 lib/tidtools/tiddle.rb
