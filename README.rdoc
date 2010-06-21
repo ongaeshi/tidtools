@@ -1,11 +1,7 @@
 = tidtools
 Sorry, this manual's language is Japanese. 
 
-tidtoolsは、TiddlyWikiをより使いやすくするためのコマンドラインツール群です。
-
-Wiki内の検索等、様々なツールが用意されています。
-
-RubyGem経由で簡単にインストール可能です。 
+tidtoolsは、TiddlyWikiをより使いやすくするためのコマンドラインツール群です。Wiki内の検索等、様々なツールが用意されています。RubyGem経由で簡単にインストール可能です。 
 
 == INSTALL:
 通常のgemインストールと同様です。
@@ -99,8 +95,8 @@ twgrepはこんな感じで使います。
 == LINKS:
 {github}[http://github.com/ongaeshi/tidtools]:: ソースコード等
 {Rubygems}[http://rubygems.org/gems/tidtools]:: gemの置き場所
-{Twitter}[http://twitter.com/tidtools]:: このツール関連の情報をしゃべくります
-{blog}[http://d.hatena.ne.jp/tuto0621/]:: 開発者のブログです、他のことも書きます
+{Twitter}[http://twitter.com/tidtools]:: このツール専用のTwitterアカウントです
+{blog}[http://d.hatena.ne.jp/tuto0621/]:: 開発者のブログです、他のことも書きますがご容赦下さい
 
 == LICENSE:
 MIT License
