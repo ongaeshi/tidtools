@@ -1,5 +1,5 @@
 = tidtools
-Sorry, this manual's language is Japanese. 
+http://github.com/ongaeshi/tidtools
 
 tidtoolsは、TiddlyWikiをより使いやすくするためのコマンドラインツール群です。Wiki内の検索等、様々なツールが用意されています。RubyGem経由で簡単にインストール可能です。 
 
