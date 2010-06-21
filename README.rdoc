@@ -1,48 +1,103 @@
 = tidtools
+http://github.com/ongaeshi/tidtools
 
-* http://github.com/ongaeshi/tidtools
-
-== DESCRIPTION:
-
-FIX (describe your package)
-
-== FEATURES/PROBLEMS:
-
-* FIX (list of features or problems)
-
-== SYNOPSIS:
-
-  FIX (code sample of usage)
-
-== REQUIREMENTS:
-
-* FIX (list of requirements)
+tidtoolsは、TiddlyWikiをより使いやすくするためのコマンドラインツール群です。Wiki内の検索等、様々なツールが用意されています。RubyGem経由で簡単にインストール可能です。 
 
 == INSTALL:
+通常のgemインストールと同様です。
 
-* FIX (sudo gem install, anything else)
+ gem install tidtools 
+
+== DESCRIPTION:
+インストールすると以下のツールが使えるようになります。
+
+<b>tidgrep</b>:: TiddlyWikiファイルをgrep検索
+<b>twgrep</b>:: TiddlyWiki内のつぶやき形式のテキストを検索
+<b>twmerge</b>:: つぶやき形式のテキストをマージする
+
+一緒に、TiddlyWikiを扱うためのライブラリもインストールされます
+
+<b>Tiddle</b>:: TiddlyWiki形式のファイルから、Tiddleの配列を取得出来る
+<b>Tweet</b>:: つぶやき形式のテキストを扱う
+
+== SETUP:
+よく使うTiddlyWikiファイルが決まっているのであれば、
+環境変数 <em>TIDDLYWIKI_PATHS</em> を設定しておくと便利です。
+
+.bashrcで設定するなら以下のようになります
+
+ # tidtoolsがデフォルトで検索するパス
+ export TIDDLYWIKI_PATHS="/Users/ongaeshi/memo.html"
+
+';'を区切り文字として、複数のTiddlyWikiを検索対象に指定することも出来ます。
+
+ # ';'を区切り文字にすると、複数のTiddlyWikiを検索対象に指定出来ます
+ export TIDDLYWIKI_PATHS="/Users/ongaeshi/memo.html;/Users/ongaeshi/work.html"
+
+== FIRST_STEP:
+環境変数を指定しておけば、ファイルの場所を指定しなくても簡単に検索が出来ます。
+
+ % tidgrep tidtools # tidtoolsと書いてあるテキストを探す
+ SiteSubtitle:1:tidtools実験用のダミーメモ
+ Tweet - 4:16:ノートのWindowsマシンだとスムーズにtidtoolsのインストールが出来た。
+ Tweet - 4:24:tidtools、まだバグがあるよ。
+ Tweet - 4:50:tidtools0.0.4 - twgrepを追加
+ .
+ . 
+
+環境変数を設定していなくても、-fオプションを指定すれば検索出来ます。
+
+ % tidgrep -f /Users/ongaeshi/memo.html tidtools # -fで検索対象を指定(ここでも;区切りが使える)
+ SiteSubtitle:1:tidtools実験用のダミーメモ
+ Tweet - 4:16:ノートのWindowsマシンだとスムーズにtidtoolsのインストールが出来た。
+ Tweet - 4:24:tidtools、まだバグがあるよ。
+ Tweet - 4:50:tidtools0.0.4 - twgrepを追加
+ .
+ .
+
+<b>twgrep</b>はtidgrepの特殊版で、<b>つぶやき形式</b>という特殊な形式で書かれたテキスト専用の検索ツールです。
+
+つぶやき形式とは、私が勝手に作ったTiddlyWikiでつぶやきっぽいテキストを書くための整形ルールです。
+<b>'----'</b>で区切りを表現し、区切りの前に<b>日時</b>を入れます。
+また<b>"Tweet - New"</b>のように、Tiddleのタイトルに<b>Tweet</b>という文字列を含みます。
+
+私は月が変わるごとに新しいTiddleを作ることにしていて、<b>"Tweet - New"</b>, <b>"Tweet - 5"</b>, <b>"Tweet - 4"</b>のようにTiddleを作っています。
+
+ # つぶやき形式の例
+ # このつぶやきは "Tweet - 4" というTiddleに保存されている
+
+ おやすみー、結局こんなに遅くなった
+ ~~@@color(gray):2010/04/06 2:28@@~~
+ ----
+ リリース失敗・・・、tidtools0.0.5を再リリース
+ ~~@@color(gray):2010/04/06 1:21@@~~
+ ----
+ tidtools0.0.4をリリース
+ ~~@@color(gray):2010/04/06 22:03@@~~
+ ----
+ おはよう
+ ~~@@color(gray):2010/04/06 08:30@@~~
+ ----
+
+twgrepはこんな感じで使います。
+
+ % twgrep tidtools # tidtoolsという文字を含むつぶやきを検索
+ --- Tweet - New --------------------
+ リリース失敗・・・、tidtools0.0.5を再リリース
+ ~~@@color(gray):2010/04/06 1:21@@~~
+ ----
+ tidtools0.0.4をリリース
+ ~~@@color(gray):2010/04/06 22:03@@~~
+ ----
+
+より詳しい使い方は各コマンドのヘルプを見て下さい。
+
+== LINKS:
+{github}[http://github.com/ongaeshi/tidtools]:: ソースコード等
+{Rubygems}[http://rubygems.org/gems/tidtools]:: gemの置き場所
+{Twitter}[http://twitter.com/tidtools]:: このツール専用のTwitterアカウントです
+{blog}[http://d.hatena.ne.jp/tuto0621/]:: 開発者のブログです、他のことも書きますがご容赦下さい
 
 == LICENSE:
+MIT License
 
-(The MIT License)
-
-Copyright (c) 2010 ongaeshi
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -5,7 +5,7 @@ require 'optparse'
 module Tidgrep
   class CLI
     def self.execute(stdout, arguments=[])
-      file_names = ENV['TIDDLYWIKI_PATHS'].split
+      file_names = ENV['TIDDLYWIKI_PATHS'].split(";")
       file_no = 0
       title = nil
       regexp_option = 0
