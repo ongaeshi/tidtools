@@ -2,7 +2,9 @@
 Sorry, this manual's language is Japanese. 
 
 tidtoolsは、TiddlyWikiをより使いやすくするためのコマンドラインツール群です。
+
 Wiki内の検索等、様々なツールが用意されています。
+
 RubyGem経由で簡単にインストール可能です。 
 
 == INSTALL:
@@ -41,8 +43,8 @@ RubyGem経由で簡単にインストール可能です。
 
  % tidgrep tidtools # tidtoolsと書いてあるテキストを探す
  SiteSubtitle:1:tidtools実験用のダミーメモ
- Tweet - 4:16:ノートのWindowsマシンだとスムーズにtidtoolsのインストールが出来た。ActiveScriptRubyの最新版(1.8.7(p249) with-winsock2 tcl-stub)にしたのが良かったのかな。
- Tweet - 4:24:tidtools、まだバグがあるよ。環境が違うことは認識したものの、kconvによる変換が上手くいっていない(何故かJISにコンバートされている？)
+ Tweet - 4:16:ノートのWindowsマシンだとスムーズにtidtoolsのインストールが出来た。
+ Tweet - 4:24:tidtools、まだバグがあるよ。
  Tweet - 4:50:tidtools0.0.4 - twgrepを追加
  .
  . 
@@ -51,8 +53,8 @@ RubyGem経由で簡単にインストール可能です。
 
  % tidgrep -f /Users/ongaeshi/memo.html tidtools # -fで検索対象を指定(ここでも;区切りが使える)
  SiteSubtitle:1:tidtools実験用のダミーメモ
- Tweet - 4:16:ノートのWindowsマシンだとスムーズにtidtoolsのインストールが出来た。ActiveScriptRubyの最新版(1.8.7(p249) with-winsock2 tcl-stub)にしたのが良かったのかな。
- Tweet - 4:24:tidtools、まだバグがあるよ。環境が違うことは認識したものの、kconvによる変換が上手くいっていない(何故かJISにコンバートされている？)
+ Tweet - 4:16:ノートのWindowsマシンだとスムーズにtidtoolsのインストールが出来た。
+ Tweet - 4:24:tidtools、まだバグがあるよ。
  Tweet - 4:50:tidtools0.0.4 - twgrepを追加
  .
  .
