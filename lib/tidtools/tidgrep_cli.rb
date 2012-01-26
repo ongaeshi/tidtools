@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-require File.join(File.dirname(__FILE__), '../tidgrep/tidgrep')
+require 'tidtools/tidgrep'
 require 'optparse'
 
-module Tidgrep
-  class CLI
+module Tidtools
+  class TidgrepCli
     def self.execute(stdout, arguments=[])
       file_names = ENV['TIDDLYWIKI_PATHS'].split(";")
       file_no = 0
@@ -35,12 +35,11 @@ module Tidgrep
                         arguments,
                         kcode)
 
-      unless obj.validOption?
-        puts opt.help
-        exit
+      if obj.validOption?
+        obj.execute
+      else
+        stdout.puts opt.help
       end
-      
-      obj.execute
     end
   end
 end

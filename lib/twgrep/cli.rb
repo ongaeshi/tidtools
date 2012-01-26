@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require File.join(File.dirname(__FILE__), '../tidgrep/tidgrep')
+require 'tidtools/tidgrep'
 require 'optparse'
 
 module Twgrep

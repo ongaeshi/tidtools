@@ -5,11 +5,10 @@
 #  Copyright (c) 2010. All rights reserved.
 
 require 'rubygems'
-require File.expand_path(File.dirname(__FILE__) + "/../lib/tidtools")
-require "tidgrep/cli"
+require "tidtools/tidgrep_cli"
 
 # バージョン番号
 Version = "0.1.0"
 
 # コマンドの実行
-Tidgrep::CLI.execute(STDOUT, ARGV)
+Tidtools::TidgrepCli.execute(STDOUT, ARGV)
