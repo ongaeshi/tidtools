@@ -2,7 +2,12 @@
 
 require 'rubygems'
 require 'hpricot'
-require 'parsedate'
+require File.join(File.dirname(__FILE__), '../tidtools/platform')
+if Platform.ruby19?
+  require 'date'
+else
+  require 'parsedate'
+end
 
 class Tiddle
   attr_reader :title, :created, :modified, :tags, :changecount, :content
@@ -32,7 +37,7 @@ class Tiddle
                                   tiddle['changecount'],
                                   content(tiddle)))
 
-#          print tiddle['modified'], '=>', tiddles.last.modified, "\n"
+          # print tiddle['modified'], '=>', tiddles.last.modified, "\n"
         end
       end
     end
@@ -77,10 +82,15 @@ class Tiddle
   private_class_method :content1
 
   # 時刻に変換
+  #   1.9の場合はDateTimeを、1.8.7の場合はTimeを返す
   def self.convtime(str)
     if (str)
-      ary = ParseDate::parsedate(str)
-      Time::local(*ary[0..4])
+      if Platform.ruby19?
+        DateTime.parse(str)
+      else
+        ary = ParseDate::parsedate(str)
+        Time::local(*ary[0..4])
+      end
     else
       nil
     end
