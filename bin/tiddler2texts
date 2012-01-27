@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+#
+#  Created on 2012-01-27.
+#  Copyright (c) 2012. All rights reserved.
+
+require 'rubygems'
+require "tidtools/tiddler2texts_cli"
+
+# バージョン番号
+Version = "0.2.0"
+
+# コマンドの実行
+Tidtools::Tiddler2textsCli.execute(STDOUT, ARGV)
