@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-require File.join(File.dirname(__FILE__), '../tidtools/tiddle')
-require File.join(File.dirname(__FILE__), '../tidtools/platform')
+require 'tidtools/tiddle'
+require 'tidtools/platform'
 require 'kconv'
 
-module Tidgrep
+module Tidtools
   class Tidgrep
     # 圧縮表示時のパラメータ
     MATCH_LINE_COMP_NUM = 5

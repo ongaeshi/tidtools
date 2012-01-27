@@ -1,3 +1,11 @@
+=== 0.2.0 2012/01/27
+
+* tiddler2texts コマンドを追加
+  * TiddlyWikiをTiddlerごとのテキストファイルに分割
+* Ruby1.9に対応
+* ディレクトリ構造の整理
+* twmergeの削除
+
 === 0.0.10 2010/06/21
 
 * TIDDLYWIKI_PATHSの区切り文字を';'に変更

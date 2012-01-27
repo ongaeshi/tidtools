@@ -13,4 +13,8 @@ class Platform
       Kconv::UTF8
     end
   end
+
+  def self.ruby19?
+    RUBY_VERSION >= '1.9.0'
+  end
 end

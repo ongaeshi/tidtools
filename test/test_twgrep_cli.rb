@@ -1,14 +1,10 @@
-require File.join(File.dirname(__FILE__), "test_helper.rb")
-require 'twgrep/cli'
+require 'test_helper'
+require 'tidtools/twgrep_cli'
 
 class TestTwgrepCli < Test::Unit::TestCase
-  def setup
-    Twgrep::CLI.execute(@stdout_io = StringIO.new, [])
-    @stdout_io.rewind
-    @stdout = @stdout_io.read
-  end
-  
-  def test_print_default_output
-    assert_match(/To update this executable/, @stdout)
+  def test_noarg
+    io = StringIO.new
+    Tidtools::TwgrepCli.execute(io, [])
+    assert_match /twgrep/, io.string
   end
 end

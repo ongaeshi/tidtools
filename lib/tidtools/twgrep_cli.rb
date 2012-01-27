@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-require File.join(File.dirname(__FILE__), '../tidgrep/tidgrep')
+require 'tidtools/tidgrep'
 require 'optparse'
 
-module Twgrep
-  class CLI
+module Tidtools
+  class TwgrepCli
     def self.execute(stdout, arguments=[])
       file_names = ENV['TIDDLYWIKI_PATHS'].split(";")
       file_no = 0
@@ -23,7 +23,7 @@ module Twgrep
       opt.on('-c', '--comp', 'compression disp') {|v| is_comp = true; report = true }
       opt.parse!(arguments)
 
-      obj = Tidgrep::Tidgrep.new(stdout,
+      obj = Tidgrep.new(stdout,
                                  file_names,
                                  file_no,
                                  title,
@@ -34,12 +34,11 @@ module Twgrep
                                  arguments,
                                  kcode)
 
-      unless obj.validOption? && arguments.size > 0
-        puts opt.help
-        exit
+      if obj.validOption? && arguments.size > 0
+        obj.execute
+      else
+        stdout.puts opt.help
       end
-      
-      obj.execute
     end
   end
 end
